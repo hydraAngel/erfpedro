@@ -37,7 +37,7 @@ else:
     
 # Cria o botão de gerar relatório
 gerbtn = ttk.Button(root, text="Gerar Relatório (PDF)",
-                    image=photoGerar, compound='left', command=lambda: genreport())
+                   image=photoGerar, compound='left', command=genreport)
 gerbtn.place(x=450, y=650)
 outDir = ''
 excelPlan = ''
@@ -649,7 +649,7 @@ def genreport():
                     iIloc += 1
 
                 elif iImagem == 2:
-                    # if ambienteAtual == df.iloc[iIloc-1]['AMBIENTE']:
+                    if ambienteAtual == df.iloc[iIloc-1]['AMBIENTE']:
                     #     ambienteAtual = df.iloc[iIloc]['AMBIENTE']
                     #     pdf.image(f'{photosPath}/{imagem}.jpg', link='', type='',
                     #             w=93, h=93, x=primeirox, y=primeiroy+120)
