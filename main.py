@@ -283,7 +283,7 @@ def genreport():
             t: Tendência
             numfoto: Se é a primeira ou segunda foto
         '''
-        def writeGUT(g: int, u: int, t: int, numfoto: int, fontsize: int):
+        def writeGUT(g: int, u: int, t: int,numfoto: int, fontsize: int, c: str):
             match g:
                 case 1:
                     gravidade = 'Nenhuma'
@@ -322,19 +322,28 @@ def genreport():
             '''
             # print(gravidade, urgencia, tendencia, sep='\n')
             if numfoto == 1:
-                writeText(f'GRAVIDADE:', x=103, y=131.6, r=47, g=11, b=97,fontsize=fontsize, bold='B')
-                writeText(f'URGÊNCIA:', x=103, y=136.3, r=47, g=11, b=97,fontsize=fontsize, bold='B')
-                writeText(f'TENDÊNCIA:', x=103, y=141, r=47, g=11, b=97,fontsize=fontsize, bold='B')
-                writeText(f'{gravidade}', x=140, y=131.6, r=0, g=0, b=0,fontsize=fontsize+1)
-                writeText(f'{urgencia}', x=140, y=136.3, r=0, g=0, b=0,fontsize=fontsize+1)
-                writeText(f'{tendencia}', x=140, y=141, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'GRAVIDADE:', x=103, y=126.9, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'URGÊNCIA:', x=103, y=131.6, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'TENDÊNCIA:', x=103, y=136.3, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'CRITICIDADE:', x=103, y=141, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+
+                writeText(f'{gravidade}', x=140, y=126.9, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'{urgencia}', x=140, y=131.6, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'{tendencia}', x=140, y=136.3, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'{c}', x=140, y=141, r=0, g=0, b=0,fontsize=fontsize+1)
+
+                
             elif numfoto == 2:
-                writeText(f'GRAVIDADE:', x=103, y=238.6, r=47, g=11, b=97,fontsize=fontsize, bold='B')
-                writeText(f'URGÊNCIA:', x=103, y=243.3, r=47, g=11, b=97,fontsize=fontsize, bold='B')
-                writeText(f'TENDÊNCIA:', x=103, y=248, r=47, g=11, b=97,fontsize=fontsize, bold='B')
-                writeText(f'{gravidade}', x=140, y=238.6, r=0, g=0, b=0,fontsize=fontsize+1)
-                writeText(f'{urgencia}', x=140, y=243.3, r=0, g=0, b=0,fontsize=fontsize+1)
-                writeText(f'{tendencia}', x=140, y=248, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'GRAVIDADE:', x=103, y=233.9, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'URGÊNCIA:', x=103, y=238.6, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'TENDÊNCIA:', x=103, y=243.3, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'CRITICIDADE:', x=103, y=248, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+
+                writeText(f'{gravidade}', x=140, y=233.9, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'{urgencia}', x=140, y=238.6, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'{tendencia}', x=140, y=243.3, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'{c}', x=140, y=248, r=0, g=0, b=0,fontsize=fontsize+1)
+
 
 
         numPag = int(current_value.get())
@@ -598,7 +607,7 @@ def genreport():
                 numFotoreal = f'%3s' % numFoto
                 sistema = df.iloc[0]['SISTEMA PRINCIPAL']
                 sisConstru = df.iloc[iIloc]['SISTEMA CONSTRUTIVO']
-                g, u, t = df.iloc[iIloc]['GRAVIDADE'], df.iloc[iIloc]['URGÊNCIA'], df.iloc[iIloc]['TENDÊNCIA']
+                g, u, t, c = df.iloc[iIloc]['GRAVIDADE'], df.iloc[iIloc]['URGÊNCIA'], df.iloc[iIloc]['TENDÊNCIA'], df.iloc[iIloc]['CRITICIDADE']
                 descricao = df.iloc[iIloc]['DESCRIÇÃO']
                 origem = df.iloc[iIloc]['ORIGEM']
                 criterio = df.iloc[iIloc]['CRITÉRIO DE ACEITAÇÃO']
@@ -616,7 +625,7 @@ def genreport():
                             pdf.rect(primeirox, primeiroy, w=93, h=93)
                             writeText(f'Foto {numFotoreal.replace(" ", "0")}', primeirox, primeiroy+97, 10, 'B')
                             writeTextSistemaConstrutivoGut(sisConstru, y=primeiroy,fontsize=10)
-                            writeGUT(g, u, t, 1,fontsize=10)
+                            writeGUT(g, u, t, 1,fontsize=10, c=c)
                             writeTextDescricaoGut(descricao, y=62,fontsize=10)
                             writeTextOrigemGut(origem, y=85.5, fontsize=10)
                             writeTextCriterioAceitacao(criterio, y=97.2, fontsize=10)
@@ -629,7 +638,7 @@ def genreport():
                             pdf.rect(primeirox, primeiroy, w=93, h=93)
                             writeText(f'Foto {numFotoreal.replace(" ", "0")}', primeirox, primeiroy+97, 10, 'B')
                             writeTextSistemaConstrutivoGut(sisConstru, y=primeiroy, fontsize=10)
-                            writeGUT(g, u, t, 1,fontsize=10)
+                            writeGUT(g, u, t, 1,fontsize=10, c=c)
                             writeTextDescricaoGut(descricao, y=62,fontsize=10)
                             writeTextOrigemGut(origem, y=85.3, fontsize=10)
                             writeTextCriterioAceitacao(criterio, y=88.3, fontsize=10)
@@ -644,7 +653,7 @@ def genreport():
                         pdf.rect(primeirox, primeiroy, w=93, h=93)
                         writeText(f'Foto {numFotoreal.replace(" ", "0")}', primeirox, primeiroy+97, 10, 'B')
                         writeTextSistemaConstrutivoGut(sisConstru, y=primeiroy,fontsize=10)
-                        writeGUT(g, u, t, 1,fontsize=10)
+                        writeGUT(g, u, t, 1,fontsize=10, c=c)
                         writeTextDescricaoGut(descricao, y=62,fontsize=10)
                         writeTextOrigemGut(origem, y=85.5, fontsize=10)
                         writeTextCriterioAceitacao(criterio, y=97.2, fontsize=10)
@@ -664,7 +673,7 @@ def genreport():
                         pdf.rect(primeirox, segundo_y, w=93, h=93)
                         writeText(f'Foto {numFotoreal.replace(" ", "0")}', primeirox, segundo_y+97, 10, 'B')
                         writeTextSistemaConstrutivoGut(sisConstru, y=segundo_y,fontsize=10)
-                        writeGUT(g, u, t, 2,fontsize=10)
+                        writeGUT(g, u, t, 2,fontsize=10, c=c)
                         writeTextDescricaoGut(descricao, y=169,fontsize=10)
                         writeTextOrigemGut(origem, y=192.5, fontsize=10)
                         writeTextCriterioAceitacao(criterio, y=204.2, fontsize=10)
@@ -684,7 +693,7 @@ def genreport():
                         writeText(f'Foto {numFotoreal.replace(" ", "0")}', primeirox, primeiroy+97, 10, 'B')
                         writeTextSistemaConstrutivoGut(sisConstru, y=primeiroy,fontsize=10)
                         
-                        writeGUT(g, u, t, 1,fontsize=10)
+                        writeGUT(g, u, t, 1,fontsize=10, c=c)
                         writeTextDescricaoGut(descricao, y=62,fontsize=10)
                         writeTextOrigemGut(origem, y=85.5, fontsize=10)
                         writeTextCriterioAceitacao(criterio, y=97.2, fontsize=10)
