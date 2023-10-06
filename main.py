@@ -37,7 +37,7 @@ else:
     
 # Cria o botão de gerar relatório
 gerbtn = ttk.Button(root, text="Gerar Relatório (PDF)",
-                   image=photoGerar, compound='left', command=genreport)
+                   image=photoGerar, compound='left', command=lambda: genreport())
 gerbtn.place(x=450, y=650)
 outDir = ''
 excelPlan = ''
