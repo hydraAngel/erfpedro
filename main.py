@@ -320,15 +320,21 @@ def genreport():
             '''
             r 47, g 11, b 97
             '''
-            print(gravidade, urgencia, tendencia, sep='\n')
+            # print(gravidade, urgencia, tendencia, sep='\n')
             if numfoto == 1:
-                writeText(f'GRAVIDADE:    {gravidade}', x=103, y=131.6, r=47, g=11, b=97,fontsize=fontsize)
-                writeText(f'URGÊNCIA:      {urgencia}', x=103, y=136.3, r=47, g=11, b=97,fontsize=fontsize)
-                writeText(f'TENDÊNCIA:    {tendencia}', x=103, y=141, r=47, g=11, b=97,fontsize=fontsize)
+                writeText(f'GRAVIDADE:', x=103, y=131.6, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'URGÊNCIA:', x=103, y=136.3, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'TENDÊNCIA:', x=103, y=141, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'{gravidade}', x=140, y=131.6, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'{urgencia}', x=140, y=136.3, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'{tendencia}', x=140, y=141, r=0, g=0, b=0,fontsize=fontsize+1)
             elif numfoto == 2:
-                writeText(f'GRAVIDADE:    {gravidade}', x=103, y=150, r=47, g=11, b=97,fontsize=fontsize)
-                writeText(f'URGÊNCIA:      {urgencia}', x=103, y=150, r=47, g=11, b=97,fontsize=fontsize)
-                writeText(f'TENDÊNCIA:    {tendencia}', x=103, y=150, r=47, g=11, b=97,fontsize=fontsize)
+                writeText(f'GRAVIDADE:', x=103, y=238.6, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'URGÊNCIA:', x=103, y=243.3, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'TENDÊNCIA:', x=103, y=248, r=47, g=11, b=97,fontsize=fontsize, bold='B')
+                writeText(f'{gravidade}', x=140, y=238.6, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'{urgencia}', x=140, y=243.3, r=0, g=0, b=0,fontsize=fontsize+1)
+                writeText(f'{tendencia}', x=140, y=248, r=0, g=0, b=0,fontsize=fontsize+1)
 
 
         numPag = int(current_value.get())
@@ -579,7 +585,9 @@ def genreport():
             ambienteAtual = df.iloc[iIloc]['AMBIENTE']
 
             add_first_page(gut=True)
+            segundo_y = primeiroy + 93 + 14
             for imagem in listaDeFotos:
+                print(numPag)
                 # if len(df.iloc[iIloc]['DESCRIÇÃO']) > 400:
                 #     print(df.iloc[iIloc]['DESCRIÇÃO'])
                 #     numerodarow = df[df['DESCRIÇÃO'] == df.iloc[iIloc]['DESCRIÇÃO']].index[0]
@@ -603,15 +611,15 @@ def genreport():
                         if ambienteAtual == df.iloc[iIloc-1]['AMBIENTE']:
                             ambienteAtual = df.iloc[iIloc]['AMBIENTE']
                             pdf.image(f'{photosPath}/{imagem}.jpg', link='', type='',
-                                    w=93, h=93, x=primeirox, y=primeiroy)
+                                w=93, h=93, x=primeirox, y=primeiroy)
                             pdf.set_draw_color(0,0,0)
                             pdf.rect(primeirox, primeiroy, w=93, h=93)
                             writeText(f'Foto {numFotoreal.replace(" ", "0")}', primeirox, primeiroy+97, 10, 'B')
                             writeTextSistemaConstrutivoGut(sisConstru, y=primeiroy,fontsize=10)
                             writeGUT(g, u, t, 1,fontsize=10)
                             writeTextDescricaoGut(descricao, y=62,fontsize=10)
-                            writeTextOrigemGut(origem, y=85.3, fontsize=10)
-                            writeTextCriterioAceitacao(criterio, y=88.3, fontsize=10)
+                            writeTextOrigemGut(origem, y=85.5, fontsize=10)
+                            writeTextCriterioAceitacao(criterio, y=97.2, fontsize=10)
                             writeAmbienteGut(ambienteAtual, primeirox, primeiroy+101, 10)
                             iImagem += 1
                         else:
@@ -636,7 +644,6 @@ def genreport():
                         pdf.rect(primeirox, primeiroy, w=93, h=93)
                         writeText(f'Foto {numFotoreal.replace(" ", "0")}', primeirox, primeiroy+97, 10, 'B')
                         writeTextSistemaConstrutivoGut(sisConstru, y=primeiroy,fontsize=10)
-                        print(g, u ,t)
                         writeGUT(g, u, t, 1,fontsize=10)
                         writeTextDescricaoGut(descricao, y=62,fontsize=10)
                         writeTextOrigemGut(origem, y=85.5, fontsize=10)
@@ -645,42 +652,53 @@ def genreport():
                         iImagem += 1
                     
                     numFoto += 1
-                    
+                    numPag += 1
                     iIloc += 1
 
                 elif iImagem == 2:
                     if ambienteAtual == df.iloc[iIloc-1]['AMBIENTE']:
-                    #     ambienteAtual = df.iloc[iIloc]['AMBIENTE']
-                    #     pdf.image(f'{photosPath}/{imagem}.jpg', link='', type='',
-                    #             w=93, h=93, x=primeirox, y=primeiroy+120)
-                    #     pdf.set_draw_color(0,0,0)
-                    #     pdf.rect(primeirox, primeiroy+120, w=93, h=93)
-                    #     writeText(f'Foto {numFotoreal.replace(" ", "0")}', primeirox, primeiroy+210.2, 10, 'B')
-                    #     writeTextParecerRet(df.iloc[iIloc]['DESCRIÇÃO'],
-                    #             primeirox, primeiroy+213.2, 10)
-                    #     if not numFoto == lenListaFotos:
-                    #         myAddPage(sistema)
-                    #     iImagem = 1
-                    #     iters += 1
+                        ambienteAtual = df.iloc[iIloc]['AMBIENTE']
+                        pdf.image(f'{photosPath}/{imagem}.jpg', link='', type='',
+                                w=93, h=93, x=primeirox, y=segundo_y)
+                        pdf.set_draw_color(0,0,0)
+                        pdf.rect(primeirox, segundo_y, w=93, h=93)
+                        writeText(f'Foto {numFotoreal.replace(" ", "0")}', primeirox, segundo_y+97, 10, 'B')
+                        writeTextSistemaConstrutivoGut(sisConstru, y=segundo_y,fontsize=10)
+                        writeGUT(g, u, t, 2,fontsize=10)
+                        writeTextDescricaoGut(descricao, y=169,fontsize=10)
+                        writeTextOrigemGut(origem, y=192.5, fontsize=10)
+                        writeTextCriterioAceitacao(criterio, y=204.2, fontsize=10)
+                        writeAmbienteGut(ambienteAtual, primeirox, segundo_y+101, 10)
+                        if not numFoto == lenListaFotos:
+                            myAddPage(sistema)
+                        iImagem = 1
+                        iters += 1
 
-                    # else:
+                    else:
 
-                    #     myAddPage(sistema)
-                    #     pdf.image(f'{photosPath}/{imagem}.jpg', link='', type='',
-                    #             w=93, h=93, x=primeirox, y=primeiroy)
-                    #     pdf.set_draw_color(0,0,0)
-                    #     pdf.rect(primeirox, primeiroy, w=93, h=93)
-                    #     writeText(f'Foto {numFotoreal.replace(" ", "0")}', primeirox, primeiroy+90.2, 10, 'B')
-                    #     writeTextParecerRet(df.iloc[iIloc]['DESCRIÇÃO'],
-                    #             primeirox, primeiroy+93.2, 10)
-                    #     iters += 1
-                    #     iImagem = 1
+                        myAddPage(sistema)
+                        pdf.image(f'{photosPath}/{imagem}.jpg', link='', type='',
+                                w=93, h=93, x=primeirox, y=primeiroy)
+                        pdf.set_draw_color(0,0,0)
+                        pdf.rect(primeirox, primeiroy, w=93, h=93)
+                        writeText(f'Foto {numFotoreal.replace(" ", "0")}', primeirox, primeiroy+97, 10, 'B')
+                        writeTextSistemaConstrutivoGut(sisConstru, y=primeiroy,fontsize=10)
+                        
+                        writeGUT(g, u, t, 1,fontsize=10)
+                        writeTextDescricaoGut(descricao, y=62,fontsize=10)
+                        writeTextOrigemGut(origem, y=85.5, fontsize=10)
+                        writeTextCriterioAceitacao(criterio, y=97.2, fontsize=10)
+                        writeAmbienteGut(ambienteAtual, primeirox, primeiroy+101, 10)
+                        iters += 1
+                        iImagem = 1
 
+                    numPag += 1
                     numFoto += 1
                     iImagem = 1
                     iIloc += 1
                     iters += 1
-                    numPag += 1
+                    
+        
         else:
             podecriar = False
             showinfo("Erro", "Selecione algum tipo de documento")
