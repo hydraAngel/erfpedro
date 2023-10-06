@@ -596,7 +596,7 @@ def genreport():
             add_first_page(gut=True)
             segundo_y = primeiroy + 93 + 14
             for imagem in listaDeFotos:
-                print(numPag)
+                # print(df.iloc[iIloc]['CONSTATAÇÃO'])
                 # if len(df.iloc[iIloc]['DESCRIÇÃO']) > 400:
                 #     print(df.iloc[iIloc]['DESCRIÇÃO'])
                 #     numerodarow = df[df['DESCRIÇÃO'] == df.iloc[iIloc]['DESCRIÇÃO']].index[0]
@@ -659,9 +659,10 @@ def genreport():
                         writeTextCriterioAceitacao(criterio, y=97.2, fontsize=10)
                         writeAmbienteGut(ambienteAtual, primeirox, primeiroy+101, 10)
                         iImagem += 1
+                        
                     
                     numFoto += 1
-                    numPag += 1
+                    # numPag += 1
                     iIloc += 1
 
                 elif iImagem == 2:
@@ -679,6 +680,7 @@ def genreport():
                         writeTextCriterioAceitacao(criterio, y=204.2, fontsize=10)
                         writeAmbienteGut(ambienteAtual, primeirox, segundo_y+101, 10)
                         if not numFoto == lenListaFotos:
+                            numPag += 1
                             myAddPage(sistema)
                         iImagem = 1
                         iters += 1
