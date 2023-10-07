@@ -679,9 +679,7 @@ def genreport():
                         writeTextOrigemGut(origem, y=192.5, fontsize=10)
                         writeTextCriterioAceitacao(criterio, y=204.2, fontsize=10)
                         writeAmbienteGut(ambienteAtual, primeirox, segundo_y+101, 10)
-                        if not numFoto == lenListaFotos:
-                            numPag += 1
-                            myAddPage(sistema)
+                        
                         iImagem = 1
                         iters += 1
 
@@ -704,6 +702,7 @@ def genreport():
                         iImagem = 1
 
                     numPag += 1
+                    myAddPage(sistema)
                     numFoto += 1
                     iImagem = 1
                     iIloc += 1
