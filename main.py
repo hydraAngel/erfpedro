@@ -96,7 +96,7 @@ btnCopy.place(x=755, y=520)
 def ask(q):
     if q == 'out':
         outDir = filedialog.askdirectory(
-            title='Selecione a pasta de saída', initialdir='.')
+            title='Selecione a pasta de saída')
         labelOut.config(text=outDir)
     elif q == 'plan':
         filetypes = (
@@ -104,11 +104,11 @@ def ask(q):
             ('Planilha excel', '*.xlsx')
         )
         excelPlan = filedialog.askopenfilename(
-            title='Selecione a planilha', filetypes=filetypes, initialdir='.')
+            title='Selecione a planilha', filetypes=filetypes)
         labelExc.config(text=excelPlan)
     elif q == 'pho':
         photosdirask = filedialog.askdirectory(
-            title='Selecione a pasta das fotos', initialdir='.')
+            title='Selecione a pasta das fotos')
         labelPho.config(text=photosdirask)
         files = os.listdir(photosdirask)
         treeSel.delete(*treeSel.get_children())
@@ -116,9 +116,8 @@ def ask(q):
         filetypes = ('.png', '.jpg', '.jpeg', '.jfif')
         for file in files:
             if file.endswith(filetypes):
-                fileName = file.split('.')[0]
-                treeSel.insert('', tk.END, values=f'{photosdirask}/{file}')
-                treeName.insert('', tk.END, values=f'{fileName}')
+                treeSel.insert('', tk.END, values=photosdirask+file)
+                treeName.insert('', tk.END, values=f'{file}')
 
 
 def genreport():
