@@ -8,6 +8,10 @@ from PIL import ImageTk, Image
 import os
 from fpdf import FPDF
 import pyperclip
+import checkUpdate
+
+
+
 
 root = tk.Tk()
 root.title("Sistema ERF (Emissor de Relatório Fotográfico)")

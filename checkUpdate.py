@@ -31,8 +31,3 @@ def download_update(update_url, download_path="ERF.zip"):
     return download_path
 
 
-def install_update(zip_path, extract_to="update"):
-
-    print("Update installed successfully. Please restart the application.")
-
-print(check_for_updates())
