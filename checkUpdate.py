@@ -17,7 +17,6 @@ def check_for_updates():
     update_url = latest_release["assets"][0]["browser_download_url"]
     with open("versaoatual.txt", 'r') as ver:
         client_version = ver.read()
-    print(client_version, latest_version)
     if latest_version != client_version:
         return latest_version, update_url
     return None, None
@@ -31,3 +30,4 @@ def download_update(update_url, download_path="ERF.zip"):
     return download_path
 
 
+check_for_updates()

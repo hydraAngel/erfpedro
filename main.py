@@ -183,14 +183,17 @@ def genreport():
         def addNumeroPaginaFirst():
             writeText(str(numPag), 196.0, 292.0, 10, '')
 
-        def add_first_page(gut: bool = False):
+        def add_first_page(gut: bool = False, relMan: bool = False):
             pdf.add_page()
-            titleCabec()
-            logo()
-            if gut == False:
-                barrinha(df.iloc[0]['GRUPO'])
-            else:
+            
+            if gut:
+                titleCabec()
+                logo()
                 barrinha(df.iloc[0]['SISTEMA PRINCIPAL'])
+            else:
+                titleCabec()
+                logo()
+                barrinha(df.iloc[0]['GRUPO'])
             addNumeroPaginaFirst()
 
         def myAddPage(ambiente):
@@ -348,21 +351,19 @@ def genreport():
                 writeText(f'{c}', x=140, y=248, r=0, g=0, b=0,fontsize=fontsize+1)
 
 
-
         numPag = int(current_value.get())
-
-        listaDeFotos = df['IMAGEM'].to_list()
-
-        podecriar = True
         listaDeLinhas = []
-        primeirox = 8.0
-        primeiroy = 50.0
-        iters = 1
-        iImagem = 1
-        numFoto = 1
-        iIloc = 0
-        
-        lenListaFotos = len(listaDeFotos)
+        podecriar = True
+        if str(alignment_var.get()) != "Relatório de manutenção":
+            listaDeFotos = df['IMAGEM'].to_list()
+
+            primeirox = 8.0
+            primeiroy = 50.0
+            iters = 1
+            iImagem = 1
+            numFoto = 1
+            iIloc = 0
+            lenListaFotos = len(listaDeFotos)
         if str(alignment_var.get()) == "Laudo de Inspeção (quadrado)":
             ambienteAtual = df.iloc[iIloc]['GRUPO']
             add_first_page(gut=False)
@@ -710,8 +711,71 @@ def genreport():
                     iImagem = 1
                     iIloc += 1
                     iters += 1
+        elif str(alignment_var.get()) == "Relatório de manutenção":         
+            blocoAtual = 1
+            for i in range(0,len(df)):
+                # print(df["SISTEMA"][i])
+                sis_atual = df["SISTEMA"][i]
+                subativo_atual = df["SUB-ATIVO"][i]
+                tipo_atual = df["TIPO"][i]
+                desc_atual = df["MODELO/DESCRIÇÃO"][i]
+                quant_atual = df["QUANTIDADE"][i]
+                local_atual = df["LOCAL"][i]
+                data_atual = df["DATA"][i]
+                falha_atual = df["FALHA"][i]
+                acao_atual = df["AÇÃO DE MAN."][i]
+                img1_atual = df["IMAGEM1"][i]
+                img2_atual = df["IMAGEM2"][i]
+                img3_atual = df["IMAGEM3"][i]
+
+
+                if blocoAtual == 1:
+                    pdf.add_page()
                     
-        
+                    # Barrinha bonita
+                    pdf.set_fill_color(22, 147, 142)
+                    pdf.rect(0.0, 0.0, 6.0, 500.0, 'F')
+                    blocoAtual += 1
+
+                    # Adiciona os textos acima das fotos
+                    writeText("SISTEMA:", 14.0, 40.0, 10, 'B')
+                    writeText("SUB-ATIVO:", 14.0, 47.0, 10, 'B')
+                    writeText("TIPO:", 14.0, 54.0, 10, 'B')
+                    writeText("MODELO/DESCRIÇÃO:", 14.0, 61.0, 10, 'B')
+                    writeText("QUANTIDADE:", 14.0, 68.0, 10, 'B')
+                    writeText("LOCAL:", 14.0, 75.0, 10, 'B')
+                    writeText("DATA:", 14.0, 82.0, 10, 'B')
+                    writeText("FALHA:", 14.0, 89.0, 10, 'B')
+                    writeText("AÇÃO DE MANUTENÇÃO:", 14.0, 96.0, 10, 'B')
+
+                    writeText(sis_atual, 33.0, 40.0, 10, '')
+                    writeText(subativo_atual, 36.0, 47.0, 10, '')
+                    writeText(tipo_atual, 25.0, 54.0, 10, '')
+                    writeText(desc_atual, 54.0, 61.0, 10, '')
+                    writeText(quant_atual, 39.0, 68.0, 10, '')
+                    writeText(local_atual, 29.0, 75.0, 10, '')
+                    writeText(data_atual, 28.0, 82.0, 10, '')
+                    writeText(falha_atual, 29.0, 89.0, 10, '')
+                    writeText(acao_atual, 60.0, 96.0, 10, '')
+
+                    # Adiciona as imagens do primeiro bloco, junto com o outline
+                    pdf.image(f'{photosPath}/{img1_atual}', link='', type='', w=60, h=60, x=14.0, y=110.0)
+                    pdf.image(f'{photosPath}/{img2_atual}', link='', type='', w=60, h=60, x=78.0, y=110.0)
+                    pdf.image(f'{photosPath}/{img3_atual}', link='', type='', w=60, h=60, x=142.0, y=110.0)
+                    pdf.set_draw_color(0,0,0)
+                    pdf.rect(14.0, 110.0, w=60, h=60)
+                    pdf.rect(78.0, 110.0, w=60, h=60)
+                    pdf.rect(142.0, 110.0, w=60, h=60)
+
+                    # Adiciona os números das fotos
+                    writeText('Foto 01', 38.0, 173.0, 8, '')
+                    writeText('Foto 02', 102.0, 173.0, 8, '')
+                    writeText('Foto 03', 166.0, 173.0, 8, '')
+
+
+
+
+
         else:
             podecriar = False
             showinfo("Erro", "Selecione algum tipo de documento")
@@ -783,20 +847,26 @@ labelPho.place(x=195, y=234, width=840)
 lf = ttk.LabelFrame(root, text='Tipo de documento')
 lf.grid(column=0, row=0, padx=25, pady=20)
 alignment_var = tk.StringVar()
-alignments = ('Laudo de Inspeção (quadrado)', 'Laudo de Inspeção (retangular)', 'Laudo de Inspeção com GUT')
+alignments = ('Laudo de Inspeção (quadrado)     ', 'Laudo de Inspeção (retangular)', 'Laudo de Inspeção com GUT', 'Relatório de manutenção')
 
-grid_column = 0
+
 for alignment in alignments:
     # create a radio button
     radio = ttk.Radiobutton(
         lf, text=alignment, value=alignment, variable=alignment_var)
-    if alignment != 'Laudo de Inspeção com GUT':
-        radio.grid(column=grid_column, row=0, ipadx=10, ipady=10)
-    else:
-        radio.grid(column=0, row=1, ipadx=10, ipady=10)
+    
+    if alignment.strip() == 'Laudo de Inspeção (quadrado)':
+        radio.grid(column=0, row=0)
+    elif alignment.strip() == 'Laudo de Inspeção (retangular)':
+        radio.grid(column=1, row=0)
+    elif alignment.strip() == 'Laudo de Inspeção com GUT':
+        radio.grid(column=0, row=1)
+    elif alignment.strip() == 'Relatório de manutenção':
+        radio.grid(column=1, row=1)
 
-    # grid column
-    grid_column += 1
+    
+
+
 
 lf.place(x=270, y=30)
 # Adiciona os endereços das fotos
