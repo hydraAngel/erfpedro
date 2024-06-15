@@ -52,7 +52,7 @@ columnsSel = ('Caminhofoto')
 
 treeSel = ttk.Treeview(root, columns=columnsSel, show='headings')
 
-treeSel.heading('Caminhofoto', text='Caminho da foto')
+treeSel.heading('Caminhofoto', text='Caminho das fotos')
 
 
 treeSel.bind('<<TreeviewSelect>>')
@@ -120,7 +120,8 @@ def ask(q):
         filetypes = ('.png', '.jpg', '.jpeg', '.jfif')
         for file in files:
             if file.endswith(filetypes):
-                treeSel.insert('', tk.END, values=photosdirask+file)
+                print(photosdirask, "  ", file)
+                treeSel.insert('', tk.END, values=photosdirask+"/"+file)
                 treeName.insert('', tk.END, values=f'{file}')
 
 
@@ -713,6 +714,8 @@ def genreport():
                     iters += 1
         elif str(alignment_var.get()) == "Relatório de manutenção":         
             blocoAtual = 1
+            pag = 1
+
             for i in range(0,len(df)):
                 # print(df["SISTEMA"][i])
                 sis_atual = df["SISTEMA"][i]
@@ -727,11 +730,24 @@ def genreport():
                 img1_atual = df["IMAGEM1"][i]
                 img2_atual = df["IMAGEM2"][i]
                 img3_atual = df["IMAGEM3"][i]
+                
+                
 
 
                 if blocoAtual == 1:
+
                     pdf.add_page()
                     
+                    # cabeçalho
+                    pdf.line(55.0, 5.0, 155.0, 5.0)
+                    pdf.line(55.0, 15.0, 155.0, 15.0)
+                    writeText("RELATÓRIO DE MANUTENÇÃO", 61.0, 10.5, 16, "B")
+                    
+                    pdf.line(175.0, 5.0, 196.0, 5.0)
+                    writeText("COD", 174.7, 6, 5)
+                    pdf.line(175.0, 10.0, 196.0, 10.0)
+                    pdf.line(175.0, 15.0, 196.0, 15.0)
+
                     # Barrinha bonita
                     pdf.set_fill_color(22, 147, 142)
                     pdf.rect(0.0, 0.0, 6.0, 500.0, 'F')
