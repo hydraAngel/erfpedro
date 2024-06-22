@@ -120,7 +120,7 @@ def ask(q):
         filetypes = ('.png', '.jpg', '.jpeg', '.jfif')
         for file in files:
             if file.endswith(filetypes):
-                print(photosdirask, "  ", file)
+                print(file)
                 treeSel.insert('', tk.END, values=photosdirask+"/"+file)
                 treeName.insert('', tk.END, values=f'{file}')
 
@@ -746,7 +746,14 @@ def genreport():
                     pdf.line(175.0, 5.0, 196.0, 5.0)
                     writeText("COD", 174.7, 6, 5)
                     pdf.line(175.0, 10.0, 196.0, 10.0)
+                    writeText("FL", 174.7, 11.0, 5)
                     pdf.line(175.0, 15.0, 196.0, 15.0)
+                    
+                    pdf.line(14.0, 17.0, 196.0, 17.0)
+                    writeText("ASSUNTO", 14.0, 19.0, 7.0)
+                    writeText("RELATÓRIO DE MANUTENÇÃO DE ATIVOS", 71.0, 21.5, 12, "B")
+                    pdf.line(14.0, 25.0, 196.0, 25.0)
+
 
                     # Barrinha bonita
                     pdf.set_fill_color(22, 147, 142)
