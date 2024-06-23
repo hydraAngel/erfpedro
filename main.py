@@ -8,7 +8,6 @@ from PIL import ImageTk, Image
 import os
 from fpdf import FPDF
 import pyperclip
-import checkUpdate
 
 
 
@@ -101,7 +100,10 @@ def ask(q):
     if q == 'out':
         outDir = filedialog.askdirectory(
             title='Selecione a pasta de saída')
-        labelOut.config(text=outDir)
+        if outDir:
+            labelOut.config(text=outDir)
+        else:
+            showinfo("Erro", "Escolha uma pasta de saída!")
     elif q == 'plan':
         filetypes = (
             ('Planilha excel', '*.xls'),
@@ -109,12 +111,20 @@ def ask(q):
         )
         excelPlan = filedialog.askopenfilename(
             title='Selecione a planilha', filetypes=filetypes)
-        labelExc.config(text=excelPlan)
+        if excelPlan:
+            labelExc.config(text=excelPlan)
+        else:
+            showinfo("Erro", "Escolha uma planilha!")
+            return
     elif q == 'pho':
         photosdirask = filedialog.askdirectory(
             title='Selecione a pasta das fotos')
         labelPho.config(text=photosdirask)
-        files = os.listdir(photosdirask)
+        if photosdirask:
+            files = os.listdir(photosdirask)
+        else:
+            showinfo("Erro", "Escolha uma pasta de fotos!")
+            return
         treeSel.delete(*treeSel.get_children())
         treeName.delete(*treeName.get_children())
         filetypes = ('.png', '.jpg', '.jpeg', '.jfif')
@@ -144,7 +154,7 @@ def genreport():
                 pdf.cell(w=210.0, h=20.0, align='C',
                         txt=entryNomeEmp.get(), border=0)
             else:
-                print("Erro", "Coloque o Nome do Condominio")
+                showinfo("Erro", "Coloque o Nome do Condominio")
 
             pdf.set_xy(0.0, 0.0)
             pdf.set_font('Helvetica', '', 11)
@@ -170,6 +180,11 @@ def genreport():
             pdf.set_xy(6.0, 0.0)
             logo = 'assets/CDE.png'
             pdf.image(logo, link='', type='', w=250/6, h=250/6)
+
+        def logoGTP():
+            pdf.set_xy(14.0, 5.0)
+            logo = 'assets/logoGTP.png'
+            pdf.image(logo, link='', type='', w=38.0, h=10.0)
 
         def barrinha(ambiente):
 
@@ -239,6 +254,12 @@ def genreport():
             pdf.set_font('Helvetica', '', fontsize)
             pdf.set_xy(103, y+4.7)
             pdf.multi_cell(txt=str(text), border=0, h=3.8, w=98.4, align='J')
+
+        def writeTextAcao(text, x:float, y: float, fontsize: int, bold: str = ''): 
+            pdf.set_text_color(0, 0, 0)
+            pdf.set_font('Helvetica', '', fontsize)
+            pdf.set_xy(x, y)
+            pdf.multi_cell(txt=str(text), border=0, w=140.5, h=3.8, align='J')
 
         def writeTextSistemaConstrutivoGut(text: any, y: float, fontsize: int, bold: str = '', r: int = 0, g: int = 0, b: int = 0):
             pdf.set_xy(103, y)
@@ -714,8 +735,11 @@ def genreport():
                     iters += 1
         elif str(alignment_var.get()) == "Relatório de manutenção":         
             blocoAtual = 1
-            pag = 1
-
+            pag = 0
+            vistoriador = df['VISTORIADOR'][0]
+            datavis = df['DATA VISTORIA'][0]
+            revisao = df['REVISÃO'][0]
+            
             for i in range(0,len(df)):
                 # print(df["SISTEMA"][i])
                 sis_atual = df["SISTEMA"][i]
@@ -730,71 +754,144 @@ def genreport():
                 img1_atual = df["IMAGEM1"][i]
                 img2_atual = df["IMAGEM2"][i]
                 img3_atual = df["IMAGEM3"][i]
-                
-                
+
 
 
                 if blocoAtual == 1:
 
                     pdf.add_page()
-                    
+                    pag += 1
                     # cabeçalho
+                    logoGTP()
                     pdf.line(55.0, 5.0, 155.0, 5.0)
                     pdf.line(55.0, 15.0, 155.0, 15.0)
-                    writeText("RELATÓRIO DE MANUTENÇÃO", 61.0, 10.5, 16, "B")
+                    writeText("GESTÃO TÉCNICA DE MANUTENÇÃO ", 55.0, 10.5, 15.5, "B")
                     
                     pdf.line(175.0, 5.0, 196.0, 5.0)
-                    writeText("COD", 174.7, 6, 5)
+                    writeText("VIST", 174.7, 6, 5)
+                    writeText(str(vistoriador).upper(), 174.7, 8.5, 8, '')
                     pdf.line(175.0, 10.0, 196.0, 10.0)
-                    writeText("FL", 174.7, 11.0, 5)
+                    writeText("PAG", 174.7, 11.0, 5)
+                    writeText(str(pag), 179, 13.5, 8, '')
                     pdf.line(175.0, 15.0, 196.0, 15.0)
                     
                     pdf.line(14.0, 17.0, 196.0, 17.0)
                     writeText("ASSUNTO", 14.0, 19.0, 7.0)
-                    writeText("RELATÓRIO DE MANUTENÇÃO DE ATIVOS", 71.0, 21.5, 12, "B")
+                    writeText("RELATÓRIO DE MANUTENÇÃO DE ATIVOS", 60.8, 21.5, 12, "B")
                     pdf.line(14.0, 25.0, 196.0, 25.0)
+
+
+                    # linhas finais (horizontais)
+                    pdf.line(14.0, 283.0, 202.0, 283.0)
+                    pdf.line(14.0, 291.0, 202.0, 291.0)
+                    # linhas finais (verticais)
+                    pdf.line(46.0, 283.0, 46.0, 291.0)
+                    pdf.line(170.0, 283.0, 170.0, 291.0)
+                    # textos finais
+                    writeText("REVISÃO:", 13.7, 285.0, 6)
+                    writeText(revisao, 13.7, 289.1, 11, '')
+                    writeText("CLIENTE:", 46.3, 285.0, 6)
+                    writeText(entryNomeEmp.get(), 46.3, 289.1, 11,'')
+                    writeText("VISTORIADO EM:", 170.3, 285.0, 6)
+                    writeText(datavis, 170.3, 289.1, 11, '')
+                    
 
 
                     # Barrinha bonita
                     pdf.set_fill_color(22, 147, 142)
                     pdf.rect(0.0, 0.0, 6.0, 500.0, 'F')
-                    blocoAtual += 1
-
+                    blocoAtual = 2
+                    ytexts = 35.0
                     # Adiciona os textos acima das fotos
-                    writeText("SISTEMA:", 14.0, 40.0, 10, 'B')
-                    writeText("SUB-ATIVO:", 14.0, 47.0, 10, 'B')
-                    writeText("TIPO:", 14.0, 54.0, 10, 'B')
-                    writeText("MODELO/DESCRIÇÃO:", 14.0, 61.0, 10, 'B')
-                    writeText("QUANTIDADE:", 14.0, 68.0, 10, 'B')
-                    writeText("LOCAL:", 14.0, 75.0, 10, 'B')
-                    writeText("DATA:", 14.0, 82.0, 10, 'B')
-                    writeText("FALHA:", 14.0, 89.0, 10, 'B')
-                    writeText("AÇÃO DE MANUTENÇÃO:", 14.0, 96.0, 10, 'B')
+                    writeText("SISTEMA:", 14.0, ytexts, 10, 'B')
+                    writeText(sis_atual, 33.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("SUB-ATIVO:", 14.0, ytexts, 10, 'B')
+                    writeText(subativo_atual, 36.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("TIPO:", 14.0, ytexts, 10, 'B')
+                    writeText(tipo_atual, 25.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("MODELO/DESCRIÇÃO:", 14.0, ytexts, 10, 'B')
+                    writeText(desc_atual, 54.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("QUANTIDADE:", 14.0, ytexts, 10, 'B')
+                    writeText(quant_atual, 39.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("LOCAL:", 14.0, ytexts, 10, 'B')
+                    writeText(local_atual, 29.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("DATA:", 14.0, ytexts, 10, 'B')
+                    writeText(data_atual, 28.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("FALHA:", 14.0, ytexts, 10, 'B')
+                    writeText(falha_atual, 29.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("AÇÃO DE MANUTENÇÃO:", 14.0, ytexts, 10, 'B')
+                    writeTextAcao(acao_atual, 60.0, ytexts-1.6, 10, '')
 
-                    writeText(sis_atual, 33.0, 40.0, 10, '')
-                    writeText(subativo_atual, 36.0, 47.0, 10, '')
-                    writeText(tipo_atual, 25.0, 54.0, 10, '')
-                    writeText(desc_atual, 54.0, 61.0, 10, '')
-                    writeText(quant_atual, 39.0, 68.0, 10, '')
-                    writeText(local_atual, 29.0, 75.0, 10, '')
-                    writeText(data_atual, 28.0, 82.0, 10, '')
-                    writeText(falha_atual, 29.0, 89.0, 10, '')
-                    writeText(acao_atual, 60.0, 96.0, 10, '')
+
 
                     # Adiciona as imagens do primeiro bloco, junto com o outline
-                    pdf.image(f'{photosPath}/{img1_atual}', link='', type='', w=60, h=60, x=14.0, y=110.0)
-                    pdf.image(f'{photosPath}/{img2_atual}', link='', type='', w=60, h=60, x=78.0, y=110.0)
-                    pdf.image(f'{photosPath}/{img3_atual}', link='', type='', w=60, h=60, x=142.0, y=110.0)
+                    pdf.image(f'{photosPath}/{img1_atual}', link='', type='', w=60, h=60, x=14.0, y=88.0)
+                    pdf.image(f'{photosPath}/{img2_atual}', link='', type='', w=60, h=60, x=78.0, y=88.0)
+                    pdf.image(f'{photosPath}/{img3_atual}', link='', type='', w=60, h=60, x=142.0, y=88.0)
                     pdf.set_draw_color(0,0,0)
-                    pdf.rect(14.0, 110.0, w=60, h=60)
-                    pdf.rect(78.0, 110.0, w=60, h=60)
-                    pdf.rect(142.0, 110.0, w=60, h=60)
+                    pdf.rect(14.0, 88.0, w=60, h=60)
+                    pdf.rect(78.0, 88.0, w=60, h=60)
+                    pdf.rect(142.0, 88.0, w=60, h=60)
 
                     # Adiciona os números das fotos
-                    writeText('Foto 01', 38.0, 173.0, 8, '')
-                    writeText('Foto 02', 102.0, 173.0, 8, '')
-                    writeText('Foto 03', 166.0, 173.0, 8, '')
+                    writeText('Foto 01', 38.0, 151.0, 8, '')
+                    writeText('Foto 02', 102.0, 151.0, 8, '')
+                    writeText('Foto 03', 166.0, 151.0, 8, '')
+                    
+                elif blocoAtual == 2:
+                    blocoAtual = 1
+                    ytexts = 160.0
+                    # Adiciona os textos acima das fotos
+                    writeText("SISTEMA:", 14.0, ytexts, 10, 'B')
+                    writeText(sis_atual, 33.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("SUB-ATIVO:", 14.0, ytexts, 10, 'B')
+                    writeText(subativo_atual, 36.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("TIPO:", 14.0, ytexts, 10, 'B')
+                    writeText(tipo_atual, 25.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("MODELO/DESCRIÇÃO:", 14.0, ytexts, 10, 'B')
+                    writeText(desc_atual, 54.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("QUANTIDADE:", 14.0, ytexts, 10, 'B')
+                    writeText(quant_atual, 39.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("LOCAL:", 14.0, ytexts, 10, 'B')
+                    writeText(local_atual, 29.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("DATA:", 14.0, ytexts, 10, 'B')
+                    writeText(data_atual, 28.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("FALHA:", 14.0, ytexts, 10, 'B')
+                    writeText(falha_atual, 29.0, ytexts, 10, '')
+                    ytexts += 5
+                    writeText("AÇÃO DE MANUTENÇÃO:", 14.0, ytexts, 10, 'B')
+                    writeTextAcao(acao_atual, 60.0, ytexts-1.6, 10, '')
 
+
+
+                    # Adiciona as imagens do primeiro bloco, junto com o outline
+                    pdf.image(f'{photosPath}/{img1_atual}', link='', type='', w=60, h=60, x=14.0, y=213.0)
+                    pdf.image(f'{photosPath}/{img2_atual}', link='', type='', w=60, h=60, x=78.0, y=213.0)
+                    pdf.image(f'{photosPath}/{img3_atual}', link='', type='', w=60, h=60, x=142.0, y=213.0)
+                    pdf.set_draw_color(0,0,0)
+                    pdf.rect(14.0, 213.0, w=60, h=60)
+                    pdf.rect(78.0, 213.0, w=60, h=60)
+                    pdf.rect(142.0, 213.0, w=60, h=60)
+
+                    # Adiciona os números das fotos
+                    writeText('Foto 01', 38.0, 276.0, 8, '')
+                    writeText('Foto 02', 102.0, 276.0, 8, '')
+                    writeText('Foto 03', 166.0, 276.0, 8, '')
 
 
 
