@@ -6,7 +6,7 @@ O Sistema ERF é uma aplicação gráfica criada com a biblioteca Tkinter em Pyt
 
 ## Pré-requisitos
 
-- Python 3.x
+- Python 3.10 ou superior
 - Tkinter
 - Pandas
 - PIL (Pillow)
