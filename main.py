@@ -10,8 +10,6 @@ from fpdf import FPDF
 import pyperclip
 
 
-
-
 root = tk.Tk()
 root.title("Sistema ERF (Emissor de Relatório Fotográfico)")
 window_width = 1050
@@ -26,17 +24,14 @@ center_x = int(screen_width/2 - window_width / 2)
 center_y = int(screen_height/2 - window_height / 2)
 root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 # root.iconbitmap('./assets/CDE.ico')
-im = Image.open('./assets/CDE.ico')
-photo = ImageTk.PhotoImage(im)
-root.wm_iconphoto(True, photo)
 root.config(background='#eeeeee')
 
 
 # Adiciona a foto
-if "nt" == os.name:
-    photoGerar = PhotoImage(file=r"assets\PDF.png")
-else:
-    photoGerar = PhotoImage(file="./assets/PDF.png")
+arquivoPDF = b'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAADa0lEQVR42i2TXWwUVRiG33POnJnZndlut7SIUhC9AFpLRSgJLZimrIVJSPFCUglgYmJIKit6Z0QNUfRCw50B/xKT3hCo8YK2xFmiUetF1RCB1B9QQvhpwLYE2La7O7s7P8dvVif5MpOcfO/3fO95h4GeX/vWf8AK5VxSMNvSOJKaQEIwiDAAdB2RAqphhEoQohxE8BSKkW2eWPf9pTfYma61ucTs/HHTELCp0ZICDZIjZVkwD+QQHT+GUEhqDFGiKvpR/btSC+A1N7zC3mnJjD1lGgOSM5qsIU1CaaJofPwxpLbvRDT8KXyhoUhNCzUSqPp1oQphXfAq4+xQOuV2J0xH4xymZEgRRZMh0Wwl8PBnw6gd2Iuq1FGgiQ+8APNBQAIBwkDhx6KXZ0N2yu0ydYcAoMcUOhFIDQ/xEGs+/gLh4UMoCR0z5Rruej4WAx+erxBGEX7xqnn2IufuxpTtcMLnjEGSqQnB0cR8OJevw89uwD9Kw7XFMu6TgBcq+IQfEsX5hcU8ewFw1zHmgASEYUDQW9GOHfv2wvCK2Nzbg2/ffAuzStJNhKj5PoJqFarm4zeACBgJcOaQMBiVolVCmrB7bBRndz2LwfePYPLnS/jr7Fh842D/lyTa35XKs5e4cNdzOIpxCFIQKsTKvixWdLRDnRnB6q3dkMc+wZXRURRuTKNSLmHu4kVMT0zgz5jgZSncLk1zGBmoRSEk7dk/8QNm3z2MFU+0wbx9CzN/X8W95kdg7tmPqfeOQG/rgHnlD3y+tDXPXjOlu1nXHO4HWJ7N4tHdg/DGv4J2/icsSZowKFRFcv3CQgki3vt+BRtsgfH+XRDt7Xn2umW4WyV30qvXYuXg8zApwoUPj6Ipk4Yt45tB3byRmXl4BQ+bGiS+fHoHtudyuH3zZp69nUrm+wyxw2hsROvAAIonh5FOp2FRHkxKJMd//8GJ63fRazCc2tKP7NAQNnZ2wh05fY4dbW089QzEHhMRDCjYCRNJQVmgREoh6o5XKTQjt+5hapuDbQcPorOtHYbGcNLpPc1WWbJ7fPmSyTulClIijrOGRKYZupVENHenLuBTaL6TNlp6tmBZy1KoqofMN1/juWvTPfE5WqTW86SKXm3gIkMWKE4kLG7l9WMoyoeI00deVMKIlYAHU5r4aC4IJ/8FoW5jeHoAh1YAAAAASUVORK5CYII='
+
+photoGerar = PhotoImage(data=arquivoPDF)
+
     
 # Cria o botão de gerar relatório
 gerbtn = ttk.Button(root, text="Gerar Relatório (PDF)",
@@ -178,7 +173,7 @@ def genreport():
 
         def logo():
             pdf.set_xy(6.0, 0.0)
-            logo = 'assets/CDE.png'
+            logo = ('assets/CDE.png')
             pdf.image(logo, link='', type='', w=250/6, h=250/6)
 
         def logoGTP():
